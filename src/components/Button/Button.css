@@ -1,0 +1,26 @@
+button{
+    padding: 0.5rem 1rem;
+    border: 1px solid black;
+    border-radius: 0.5rem;
+    margin: 0rem 1rem;
+    font-size: 1rem;
+}
+
+.primary {
+    background-color: #93C5FD;
+}
+.primary:hover{
+    background-color: #3B82F6;
+}
+.secondary {
+    background-color: #CBD5E1;
+}
+.secondary:hover{
+    background-color: #64748B;
+}
+.danger {
+    background-color: #FCA5A5;
+}
+.danger:hover{
+    background-color: #EF4444;
+}

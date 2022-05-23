@@ -1,0 +1,27 @@
+.data-wrapper{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  justify-content: center;
+  padding: 0.7rem 0rem;
+  margin: 0rem;
+}
+
+.title{
+  justify-self: right;
+}
+.SearchBar{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #34D399;
+  padding: 0.7rem;
+  font-size: large;
+}
+
+label{
+  margin: 0rem 1rem;
+}
+input{
+  margin: 0rem 0.5rem;
+}
