@@ -10,7 +10,7 @@
 .title{
   justify-self: right;
 }
-.SearchBar{
+.search-bar{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,9 +19,11 @@
   font-size: large;
 }
 
-label{
-  margin: 0rem 1rem;
-}
-input{
+.search-input{
   margin: 0rem 0.5rem;
+  width: 12rem;
+}
+
+.checkbox {
+  width: 3rem;
 }

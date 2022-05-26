@@ -3,14 +3,38 @@
     grid-template-columns: 1fr 3fr;
     border: 1px solid #34D399;
     border-radius: 0.5rem;
-    padding: 0rem;
+    padding: 0.5rem;
     column-gap: 0.5rem;
     max-width: 30rem;
     min-width: 30rem;
     transition: all .2s ease-in-out;
     background-color: #ECFDF5;
+    position: relative;
   }
   .Card:hover {
     transform: scale(1.03); 
     background-color: #34D399;
+  }
+  .card-buttons {
+    position: absolute;
+    right: 0;
+  }
+
+  .action-button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    padding: 0.4rem 0.5rem 0rem 0rem;
+  }
+
+  .button-icon {
+    width: 1.5rem;
+    height:1.5rem;
+  }
+  .edit-icon:hover {
+    color:#3B82F6;
+  }
+  
+  .delete-icon:hover {
+    color: #EF4444;
   }

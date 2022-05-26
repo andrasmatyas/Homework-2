@@ -7,7 +7,7 @@ interface ButtonProps{
 }
 const Button = ({type, label, action}: ButtonProps) => {
   return (
-    <button className={type} onClick={action}>
+    <button className={`button-style ${type}`}  onClick={action}>
         {label}
     </button>
   )

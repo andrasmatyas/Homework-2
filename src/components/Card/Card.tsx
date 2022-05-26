@@ -1,13 +1,16 @@
 import {RowSchema} from '../../App'
 import './Card.css'
+import {RiDeleteBinFill, RiFileEditFill} from 'react-icons/ri'
+import {useState} from "react"
 
 interface CardProps {
     cardData: RowSchema,
-    cardReturn: (id: string, type: 'del'|'upd') => void
+    cardReturn: (id: string, type: 'Delete'|'Update') => void
 }
 const Card = ({cardData, cardReturn}:CardProps) => {
+  const [clicked, setClicked] = useState(false)
   return (
-    <li key={cardData.id} className='Card'>
+    <li key={cardData.id} className='Card' onClick={()=>setClicked((prevState)=>!prevState)}>
     <div className='title'>Name: </div>
     <div>{cardData.first_name +' '+cardData.last_name}</div>
     <div className='title'>Age: </div>
@@ -28,8 +31,12 @@ const Card = ({cardData, cardReturn}:CardProps) => {
     <div>{cardData.linkedin_skills}</div>
     <div className='title'>IP Address: </div>
     <div>{cardData.ip_address}</div>
-    <button onClick={()=>cardReturn(cardData.id, 'del')}>Delete</button>
-    <button onClick={()=>cardReturn(cardData.id, 'upd')}>Update</button>
+    {clicked && <div className='card-buttons'>
+      <button onClick={()=>cardReturn(cardData.id, 'Update')} className='action-button'> 
+      <RiFileEditFill className='button-icon edit-icon'/> </button>
+      <button onClick={()=>cardReturn(cardData.id, 'Delete')} className='action-button'> 
+      <RiDeleteBinFill className='button-icon delete-icon'/> </button>
+    </div>}
   </li>
   )
 }

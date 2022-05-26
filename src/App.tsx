@@ -6,6 +6,7 @@ import savedData from './data/users.json';
 import Card from './components/Card/Card';
 import Button from './components/Button/Button';
 import Dialog from './components/Dialog/Dialog';
+import Scroll from './components/Scroll/Scroll';
 
 export interface RowSchema {
   id: string,
@@ -41,8 +42,7 @@ function App() {
   const [maleCheck, setMaleCheck] = useState(true)
   const [femaleCheck, setFemaleCheck] = useState(true)
   const [searchValue, setSearchValue] = useState('')
-  const [targetId, setTargetId] = useState('')
-  const [dialogType, setDialogType] = useState<'del'|'upd'|'new'|''>('')
+  const [dialogType, setDialogType] = useState<'Delete'|'Update'|'Create'|''>('')
   const [dialogData, setDialogData] = useState<RowSchema>({id:'', ...initRow})
 
 useEffect(() => {
@@ -91,15 +91,14 @@ const handleFemaleCheck = () => {
 };
 
 const newAction = () => {
-  setDialogType('new')
+  setDialogType('Create')
   setDialogData(dialogData=>({id:uuidv4(), ...initRow}))
-  console.log('new')
 }
 
-const cardAction = (id:string, type:'del'|'upd') => {
+const cardAction = (id:string, type:'Delete'|'Update') => {
   setDialogType(type)
-  if (type==='del') {setDialogData(dialogData=>({id: id, ...initRow}))}
-  if (type==='upd') {
+  if (type==='Delete') {setDialogData(dialogData=>({id: id, ...initRow}))}
+  if (type==='Update') {
     const updRow = data.filter((row)=>{return row.id === id})
     setDialogData(dialogData => updRow[0])
   }
@@ -107,50 +106,73 @@ const cardAction = (id:string, type:'del'|'upd') => {
 
 const dialogAction = (newRow: RowSchema) => {
   switch (dialogType) {
-    case 'del':
-      const newData = data.filter((row: RowSchema)=>{return row.id !== newRow.id})
-      setData(newData)
+    case 'Delete':
+      const delData = data.filter((row: RowSchema)=>{return row.id !== newRow.id})
+      setData(delData)
       setDialogType('')
+      setDialogData({id:'', ...initRow})
+      break;
+    case 'Update':
+      const updData = data.map((row: RowSchema)=>{
+        if (row.id === newRow.id) {
+          return newRow
+        }
+        return row
+      })
+      setData(updData)
+      setDialogType('')
+      setDialogData({id:'', ...initRow})
+      break;
+    case 'Create':
+      const creData = [...data]
+      creData.unshift(newRow)
+      setData(creData)
+      setDialogType('')
+      setDialogData({id:'', ...initRow})
       break;
     default:
+      setDialogType('')
+      setDialogData({id:'', ...initRow})
       break;
   } 
 }
 
 const renderData = filteredData && filteredData.map((row: RowSchema)=>{
-  return (<Card cardData={row} cardReturn={(id:string, type:'del'|'upd')=>cardAction(id,type)} ></Card>)
+  return (<Card cardData={row} cardReturn={(id:string, type:'Delete'|'Update')=>cardAction(id,type)} ></Card>)
 })
 
   return (
     <>
       {dialogType && (
         <Dialog type={dialogType} data={dialogData} cancel={() => setDialogType('')} handle={(rData)=> dialogAction(rData)}/>)}
-      <div className='SearchBar'>
+      <div className='search-bar'>
         <label> Search Name: 
-          <input
+          <input className='search-input'
             type="text"
             value={searchValue}
             onChange={(e) => setSearchValue((e.target as HTMLInputElement).value)}
           ></input>
         </label>
         <label>
-          <input type="checkbox" 
+          <input className='checkbox'
+            type="checkbox" 
             checked={maleCheck}
             onChange={handleMaleCheck}/>
         Male
         </label>
         <label>
-          
-          <input type="checkbox" 
+          <input className='checkbox'
+            type="checkbox" 
             checked={femaleCheck}
             onChange={handleFemaleCheck}/>
         Female
         </label>
         <Button type='primary' label='Create New' action={() => newAction()} />
       </div>
-      <ul className='data-wrapper'>
-        {renderData}
-      </ul>
+      <Scroll>
+        <ul className='data-wrapper'>{renderData}</ul>
+      </Scroll>
+      
     </>
   );
 }
