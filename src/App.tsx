@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
+import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import './App.css'
 import savedData from 'data/users.json'
-import { Button, Card, Dialog, Scroll } from 'components'
+import { Button, Card, Dialog, Scroll, Search } from 'components'
 import { RowSchema } from 'interfaces/schemas'
 import { initRow } from 'data/initialValues'
 import useFilter from 'hooks/useFilter'
@@ -10,17 +11,21 @@ import useFilter from 'hooks/useFilter'
 function App() {
     const [data, setData] = useState<RowSchema[]>([])
     const [filteredData, setFilteredData] = useState<RowSchema[]>([])
-
     const [dialogType, setDialogType] = useState<'Delete' | 'Update' | 'Create' | ''>('')
     const [dialogData, setDialogData] = useState<RowSchema>({ id: '', ...initRow })
 
     useEffect(() => {
-        setData(savedData)
-        //const fetchData = async () =>  {
-        //  const response = await axios.get('https://my.api.mockaroo.com/api/users?key=10d78d90')
-        //setData(response.data)
-        //}
-        //fetchData()
+        const fetchData = async () =>  {
+          try {
+            const response = await axios.get('https://my.api.mockaroo.com/api/users?key=10d78d90')
+            if (!response.data.error) {
+              setData(response.data)
+            }
+          } catch (e){
+              setData(savedData)
+          }
+        }
+        fetchData()
     }, [])
 
     useEffect(() => {
@@ -32,9 +37,10 @@ function App() {
         setFilteredData
     )
 
-    useEffect(() => {
-        console.log(dialogType)
-    }, [dialogType])
+    const initDialogAll = () => {
+      setDialogType('')
+      setDialogData({ id: '', ...initRow })
+    }
 
     const newAction = () => {
         setDialogType('Create')
@@ -61,8 +67,7 @@ function App() {
                     return row.id !== newRow.id
                 })
                 setData(delData)
-                setDialogType('')
-                setDialogData({ id: '', ...initRow })
+                initDialogAll()
                 break
             case 'Update':
                 const updData = data.map((row: RowSchema) => {
@@ -72,19 +77,16 @@ function App() {
                     return row
                 })
                 setData(updData)
-                setDialogType('')
-                setDialogData({ id: '', ...initRow })
+                initDialogAll()
                 break
             case 'Create':
                 const creData = [...data]
                 creData.unshift(newRow)
                 setData(creData)
-                setDialogType('')
-                setDialogData({ id: '', ...initRow })
+                initDialogAll()
                 break
             default:
-                setDialogType('')
-                setDialogData({ id: '', ...initRow })
+                initDialogAll()
                 break
         }
     }
@@ -106,15 +108,7 @@ function App() {
                 />
             )}
             <div className='search-bar'>
-                <label>
-                    Search Name:
-                    <input
-                        className='search-input'
-                        type='text'
-                        value={searchValue}
-                        onChange={(e) => setSearchValue((e.target as HTMLInputElement).value)}
-                    ></input>
-                </label>
+                <Search label='Search Name' searchValue={searchValue} handleSearch={(value) => setSearchValue(value)} />
                 <label>
                     <input className='checkbox' type='checkbox' checked={maleCheck} onChange={handleMaleCheck} />
                     Male

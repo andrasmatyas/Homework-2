@@ -9,28 +9,30 @@ interface CardProps {
 }
 const Card = ({ cardData, cardReturn }: CardProps) => {
     const [clicked, setClicked] = useState(false)
+    const fields = [
+        { label: 'Age', prop: 'age' },
+        { label: 'Gender', prop: 'gender' },
+        { label: 'Country', prop: 'country_of_birth' },
+        { label: 'Education', prop: 'education' },
+        { label: 'Job', prop: 'job_title' },
+        { label: 'Email', prop: 'email' },
+        { label: 'User', prop: 'user_name' },
+        { label: 'LinkedIn', prop: 'linkedin_skills' },
+        { label: 'IP Address', prop: 'ip_address' },
+    ]
+    const renderedFields = fields.map((el)=>{
+        return (
+            <> 
+                <div className='title'>{el.label}: </div>
+                <div>{cardData[el.prop]}</div>
+            </>
+        )
+    })
     return (
         <li key={cardData.id} className='Card' onClick={() => setClicked((prevState) => !prevState)}>
             <div className='title'>Name: </div>
             <div>{cardData.first_name + ' ' + cardData.last_name}</div>
-            <div className='title'>Age: </div>
-            <div>{cardData.age}</div>
-            <div className='title'>Gender: </div>
-            <div>{cardData.gender}</div>
-            <div className='title'>Country: </div>
-            <div>{cardData.country_of_birth}</div>
-            <div className='title'>Education: </div>
-            <div>{cardData.education}</div>
-            <div className='title'>Job: </div>
-            <div>{cardData.job_title}</div>
-            <div className='title'>Email: </div>
-            <div>{cardData.email}</div>
-            <div className='title'>User Name: </div>
-            <div>{cardData.user_name}</div>
-            <div className='title'>Linkedin skills: </div>
-            <div>{cardData.linkedin_skills}</div>
-            <div className='title'>IP Address: </div>
-            <div>{cardData.ip_address}</div>
+            {renderedFields}
             {clicked && (
                 <div className='card-buttons'>
                     <button onClick={() => cardReturn(cardData.id, 'Update')} className='action-button'>

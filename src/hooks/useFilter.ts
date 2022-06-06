@@ -6,30 +6,24 @@ const useFilter = (data: RowSchema[], setFilteredData: (data: RowSchema[]) => vo
     const [femaleCheck, setFemaleCheck] = useState(true)
     const [searchValue, setSearchValue] = useState('')
 
+    const nameMatched = (row :RowSchema) => {
+        return (row.first_name.toLowerCase().includes(searchValue.toLocaleLowerCase()) ||
+        row.last_name.toLowerCase().includes(searchValue.toLocaleLowerCase()))
+    }
     useEffect(() => {
         if (maleCheck && femaleCheck) {
-            const searchData = data.filter(
-                (row: RowSchema) =>
-                    row.first_name.toLowerCase().includes(searchValue.toLocaleLowerCase()) ||
-                    row.last_name.toLowerCase().includes(searchValue.toLocaleLowerCase())
-            )
+            const searchData = data.filter((row: RowSchema) => nameMatched(row))
             setFilteredData(searchData)
         }
         if (maleCheck && !femaleCheck) {
             const maleData = data.filter(
-                (row: RowSchema) =>
-                    row.gender.toLowerCase() === 'male' &&
-                    (row.first_name.toLowerCase().includes(searchValue.toLocaleLowerCase()) ||
-                        row.last_name.toLowerCase().includes(searchValue.toLocaleLowerCase()))
+                (row: RowSchema) => row.gender.toLowerCase() === 'male' && (nameMatched(row))
             )
             setFilteredData(maleData)
         }
         if (!maleCheck && femaleCheck) {
             const femaleData = data.filter(
-                (row: RowSchema) =>
-                    row.gender.toLowerCase() === 'female' &&
-                    (row.first_name.toLowerCase().includes(searchValue.toLocaleLowerCase()) ||
-                        row.last_name.toLowerCase().includes(searchValue.toLocaleLowerCase()))
+                (row: RowSchema) => row.gender.toLowerCase() === 'female' &&(nameMatched(row))
             )
             setFilteredData(femaleData)
         }
